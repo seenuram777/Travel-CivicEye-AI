@@ -618,6 +618,32 @@ The deployment of CivicEye AI is designed for high availability and scalability 
 
 ---
 
+# EVALUATION FOCUS AREAS
+
+### 🎨 Accessibility (A11y)
+- **Semantic HTML**: Proper use of `<nav>`, `<section>`, `<header>`, and `<footer>` tags.
+- **ARIA Roles**: Implementation of `menubar`, `menuitem`, and `aria-label` for navigation and interactive elements.
+- **Focus Management**: Ensuring all interactive elements are keyboard accessible and have clear focus states.
+
+### 🔒 Security
+- **Content Security Policy (CSP)**: Robust CSP implemented in `<meta>` tags to prevent XSS and unauthorized script execution.
+- **Input Sanitization**: Client-side validation and sanitization of user-reported hazard data.
+
+### ⚡ Efficiency
+- **Lightweight Assets**: Use of SVG icons and optimized external libraries (Leaflet).
+- **Responsive Design**: Mobile-first approach with fluid layouts and media queries.
+
+### 🧪 Testing
+- **Modular Data**: Decoupled data from logic for easier unit testing.
+- **Test Suite**: Basic Jest-compatible test suite structure in `tests/` directory to validate data integrity.
+
+### ☁️ Google Services Integration
+- **Google Cloud Run**: Pre-configured `Dockerfile` with Nginx for optimized static site hosting on GCP.
+- **Vertex AI / Gemini Vision**: UI designed to integrate Gemini Vision API for automatic road hazard classification.
+- **Google Maps API**: Ready-to-use hooks for replacing Leaflet with Google Maps SDK for production-grade routing.
+
+---
+
 # FUTURE ROADMAP
 
 Phase 2:

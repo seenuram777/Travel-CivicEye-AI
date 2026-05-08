@@ -357,44 +357,65 @@ document.addEventListener('DOMContentLoaded', () => {
       analyzeBtn.innerHTML = '<span class="pulse-dot sm" style="display:inline-block; margin-right:8px"></span> Analyzing with Gemini Vision...';
       analyzeBtn.disabled = true;
       
-      // Simulate AI processing delay
-      setTimeout(() => {
+      // Real API Call to our FastAPI backend
+      const formData = new FormData();
+      // Since it's a prototype, we can use a mock file if one isn't real, but we try to use the actual one
+      const file = fileInput.files[0];
+      if (file) {
+        formData.append('file', file);
+      }
+
+      fetch('/api/detect-hazard', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
         analyzeBtn.innerHTML = originalText;
         analyzeBtn.disabled = false;
         
         reportEmpty.style.display = 'none';
         detectionResult.style.display = 'block';
         
-        // Populate results
+        // Populate results from API response
         document.getElementById('detection-grid').innerHTML = `
           <div class="detection-item">
             <div class="detection-label">Hazard Class</div>
-            <div class="detection-val">🌊 Severe Waterlogging</div>
+            <div class="detection-val">${data.hazard_class}</div>
           </div>
           <div class="detection-item">
-            <div class="detection-label">Water Depth</div>
-            <div class="detection-val">~18-24 inches</div>
+            <div class="detection-label">Severity</div>
+            <div class="detection-val" style="color: ${data.severity === 'High' ? 'var(--danger)' : 'var(--warning)'}">${data.severity}</div>
+          </div>
+          <div class="detection-item">
+            <div class="detection-label">Risk Score</div>
+            <div class="detection-val">${data.risk_score}/100</div>
           </div>
           <div class="detection-item">
             <div class="detection-label">Vehicle Risk</div>
-            <div class="detection-val" style="color: var(--danger)">High (2W/4W)</div>
-          </div>
-          <div class="detection-item">
-            <div class="detection-label">Road Condition</div>
-            <div class="detection-val">Invisible Surface</div>
+            <div class="detection-val">${data.detection_details.vehicle_risk}</div>
           </div>
         `;
         
         // Animate severity bar
         setTimeout(() => {
-          document.getElementById('severity-bar').style.width = '85%';
+          document.getElementById('severity-bar').style.width = `${data.risk_score}%`;
+          const bar = document.getElementById('severity-bar');
+          if (data.risk_score > 70) bar.style.background = 'var(--danger)';
+          else if (data.risk_score > 40) bar.style.background = 'var(--warning)';
+          else bar.style.background = 'var(--success)';
         }, 100);
         
         document.getElementById('detection-advisory').innerHTML = `
-          <strong>AI Action:</strong> Incident classified as High Risk. This will automatically reroute ~1,240 nearby commuters and alert the BBMP control room.
+          <strong>AI Action:</strong> ${data.ai_advisory}
         `;
-        
-      }, 2000);
+      })
+      .catch(error => {
+        console.error('Error calling AI engine:', error);
+        analyzeBtn.innerHTML = originalText;
+        analyzeBtn.disabled = false;
+        alert('AI Analysis failed. Please ensure the backend is running.');
+      });
     });
   }
 

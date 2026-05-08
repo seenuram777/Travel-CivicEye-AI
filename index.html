@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://unpkg.com; connect-src 'self';" />
   <title>CivicEye AI — Safer Urban Mobility Intelligence</title>
   <meta name="description" content="AI-powered urban travel safety platform that dynamically plans safer, smarter, disruption-aware city travel using real-time civic intelligence." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <!-- Placeholder for Google Maps API -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script> -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -32,11 +35,11 @@
         </div>
         <span class="logo-text">CivicEye <span class="logo-ai">AI</span></span>
       </div>
-      <ul class="nav-links">
-        <li><a href="#planner" class="nav-link">Plan Route</a></li>
-        <li><a href="#map-section" class="nav-link">Live Map</a></li>
-        <li><a href="#report" class="nav-link">Report Hazard</a></li>
-        <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+      <ul class="nav-links" role="menubar">
+        <li role="none"><a href="#planner" class="nav-link" role="menuitem">Plan Route</a></li>
+        <li role="none"><a href="#map-section" class="nav-link" role="menuitem">Live Map</a></li>
+        <li role="none"><a href="#report" class="nav-link" role="menuitem">Report Hazard</a></li>
+        <li role="none"><a href="#dashboard" class="nav-link" role="menuitem">Dashboard</a></li>
       </ul>
       <a href="#planner" class="btn-nav-cta">Start Planning</a>
       <button class="hamburger" id="hamburger" aria-label="menu">
@@ -115,30 +118,30 @@
         <!-- Left: Form -->
         <div class="planner-form-card glass-card">
           <div class="form-group">
-            <label class="form-label">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            <label class="form-label" for="from-input">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
               From
             </label>
             <div class="input-wrapper">
-              <input type="text" id="from-input" class="form-input" placeholder="e.g. Marathahalli" value="Marathahalli"/>
-              <button class="locate-btn" title="Use current location">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <input type="text" id="from-input" class="form-input" placeholder="e.g. Marathahalli" value="Marathahalli" aria-required="true"/>
+              <button class="locate-btn" title="Use current location" aria-label="Use current location">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </button>
             </div>
           </div>
 
           <div class="swap-btn-wrapper">
-            <button class="swap-btn" id="swap-btn" title="Swap">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            <button class="swap-btn" id="swap-btn" title="Swap locations" aria-label="Swap from and to locations">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
             </button>
           </div>
 
           <div class="form-group">
-            <label class="form-label">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <label class="form-label" for="to-input">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
               To
             </label>
-            <input type="text" id="to-input" class="form-input" placeholder="e.g. HSR Layout" value="HSR Layout"/>
+            <input type="text" id="to-input" class="form-input" placeholder="e.g. HSR Layout" value="HSR Layout" aria-required="true"/>
           </div>
 
           <div class="form-group">

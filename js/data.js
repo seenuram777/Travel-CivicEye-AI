@@ -107,3 +107,8 @@ const routeMockData = {
     issues: ['Minor Traffic']
   }
 };
+
+// Export for Node.js testing environment
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { mockHazards, dashboardData, routeMockData, mapCenter };
+}

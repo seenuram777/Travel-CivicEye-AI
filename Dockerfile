@@ -1,9 +1,18 @@
-FROM nginx:alpine
+# Use Python as base for FastAPI
+FROM python:3.11-slim
 
-COPY . /usr/share/nginx/html
+# Set working directory
+WORKDIR /app
 
-RUN sed -i 's/listen       80;/listen 8080;/g' /etc/nginx/conf.d/default.conf
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the rest of the application
+COPY . .
+
+# Expose the port Cloud Run uses
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+# Run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
