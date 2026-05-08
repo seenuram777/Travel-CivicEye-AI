@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicEye AI — Safer Urban Mobility Intelligence</title>
+  <meta name="description" content="AI-powered urban travel safety platform that dynamically plans safer, smarter, disruption-aware city travel using real-time civic intelligence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" stroke="url(#g1)" stroke-width="2"/>
+            <ellipse cx="20" cy="20" rx="10" ry="6" stroke="#00f5ff" stroke-width="1.5"/>
+            <circle cx="20" cy="20" r="4" fill="url(#g1)"/>
+            <circle cx="20" cy="20" r="2" fill="#fff"/>
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="40" y2="40">
+                <stop offset="0%" stop-color="#00f5ff"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">CivicEye <span class="logo-ai">AI</span></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#planner" class="nav-link">Plan Route</a></li>
+        <li><a href="#map-section" class="nav-link">Live Map</a></li>
+        <li><a href="#report" class="nav-link">Report Hazard</a></li>
+        <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+      </ul>
+      <a href="#planner" class="btn-nav-cta">Start Planning</a>
+      <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-orb orb1"></div>
+      <div class="hero-orb orb2"></div>
+      <div class="hero-orb orb3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Live Civic Intelligence Active — Bengaluru
+      </div>
+      <h1 class="hero-title">
+        Navigate <span class="gradient-text">Smarter.</span><br/>
+        Travel <span class="gradient-text">Safer.</span>
+      </h1>
+      <p class="hero-sub">AI-powered urban mobility intelligence that avoids floods, potholes, and road hazards in real-time. Because the fastest route isn't always the safest.</p>
+      <div class="hero-actions">
+        <a href="#planner" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Plan Safe Route
+        </a>
+        <a href="#report" class="btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Report Hazard
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num" data-target="1247">0</span>
+          <span class="stat-label">Hazards Mapped</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="89">0</span><span class="stat-suffix">%</span>
+          <span class="stat-label">Safer Routes</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="52">0</span><span class="stat-suffix">K+</span>
+          <span class="stat-label">Citizens Protected</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="24">0</span><span class="stat-suffix">/7</span>
+          <span class="stat-label">Live Monitoring</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-indicator">
+        <div class="scroll-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROUTE PLANNER -->
+  <section class="section" id="planner">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">AI Route Engine</div>
+        <h2 class="section-title">Smart Route <span class="gradient-text">Planner</span></h2>
+        <p class="section-sub">Plan your safest route with real-time civic hazard intelligence</p>
+      </div>
+
+      <div class="planner-grid">
+        <!-- Left: Form -->
+        <div class="planner-form-card glass-card">
+          <div class="form-group">
+            <label class="form-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              From
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="from-input" class="form-input" placeholder="e.g. Marathahalli" value="Marathahalli"/>
+              <button class="locate-btn" title="Use current location">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="swap-btn-wrapper">
+            <button class="swap-btn" id="swap-btn" title="Swap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              To
+            </label>
+            <input type="text" id="to-input" class="form-input" placeholder="e.g. HSR Layout" value="HSR Layout"/>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Travel Mode</label>
+            <div class="mode-grid">
+              <button class="mode-btn active" data-mode="car">🚗<span>Car</span></button>
+              <button class="mode-btn" data-mode="bike">🏍️<span>Bike</span></button>
+              <button class="mode-btn" data-mode="walk">🚶<span>Walk</span></button>
+              <button class="mode-btn" data-mode="emergency">🚑<span>Emergency</span></button>
+              <button class="mode-btn" data-mode="elderly">👴<span>Elderly</span></button>
+              <button class="mode-btn" data-mode="wheelchair">♿<span>Accessible</span></button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Safety Preferences</label>
+            <div class="pref-list">
+              <label class="pref-toggle">
+                <input type="checkbox" id="pref-flood" checked/>
+                <span class="toggle-track"></span>
+                <span>Avoid Flood Zones</span>
+              </label>
+              <label class="pref-toggle">
+                <input type="checkbox" id="pref-pothole" checked/>
+                <span class="toggle-track"></span>
+                <span>Avoid Potholes</span>
+              </label>
+              <label class="pref-toggle">
+                <input type="checkbox" id="pref-safe"/>
+                <span class="toggle-track"></span>
+                <span>Prioritize Safety Over Speed</span>
+              </label>
+              <label class="pref-toggle">
+                <input type="checkbox" id="pref-smooth"/>
+                <span class="toggle-track"></span>
+                <span>Smoother Road Surface</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn-primary btn-full" id="plan-route-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate AI Route
+          </button>
+        </div>
+
+        <!-- Right: Results -->
+        <div class="planner-results" id="planner-results">
+          <!-- AI Loading -->
+          <div class="ai-loading glass-card" id="ai-loading" style="display:none">
+            <div class="ai-brain">
+              <div class="brain-pulse"></div>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gBrain)" stroke-width="1.5"><path d="M9.5 2A2.5 2.5 0 017 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5z"/><path d="M7 8H4.5A2.5 2.5 0 002 10.5v3A2.5 2.5 0 004.5 16H7"/><path d="M17 8h2.5A2.5 2.5 0 0122 10.5v3A2.5 2.5 0 0119.5 16H17"/><defs><linearGradient id="gBrain" x1="0" y1="0" x2="24" y2="24"><stop offset="0%" stop-color="#00f5ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+            </div>
+            <p class="ai-loading-text">Analyzing civic hazard data...</p>
+            <div class="ai-steps">
+              <div class="ai-step" id="step1">🔍 Scanning road conditions</div>
+              <div class="ai-step" id="step2">🌊 Checking flood reports</div>
+              <div class="ai-step" id="step3">🗺️ Computing safe routes</div>
+              <div class="ai-step" id="step4">⚡ Generating AI advisory</div>
+            </div>
+          </div>
+
+          <!-- Route Results -->
+          <div id="route-results" style="display:none">
+            <div class="alert-banner" id="route-alert">
+              <span class="alert-icon">⚠️</span>
+              <div>
+                <strong>Hazard Detected on Primary Route</strong>
+                <p>Severe waterlogging at Bellandur Lake Road. Safer alternate recommended.</p>
+              </div>
+            </div>
+
+            <div class="route-cards" id="route-cards"></div>
+
+            <div class="ai-advisory glass-card">
+              <div class="advisory-header">
+                <span class="advisory-icon">🤖</span>
+                <strong>CivicEye AI Advisory</strong>
+              </div>
+              <p id="advisory-text"></p>
+              <div class="advisory-tags" id="advisory-tags"></div>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state glass-card" id="empty-state">
+            <div class="empty-icon">🗺️</div>
+            <h3>Your safe route awaits</h3>
+            <p>Fill in your origin and destination, choose your travel preferences, and let CivicEye AI compute the safest path for you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE MAP -->
+  <section class="section" id="map-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Real-Time Intelligence</div>
+        <h2 class="section-title">Live <span class="gradient-text">Hazard Map</span></h2>
+        <p class="section-sub">Real-time civic hazard intelligence across Bengaluru</p>
+      </div>
+    </div>
+
+    <div class="map-wrapper">
+      <div class="map-controls">
+        <div class="container">
+          <div class="map-filter-bar">
+            <button class="filter-btn active" data-filter="all">All Hazards</button>
+            <button class="filter-btn" data-filter="flood">🌊 Floods</button>
+            <button class="filter-btn" data-filter="pothole">🕳️ Potholes</button>
+            <button class="filter-btn" data-filter="construction">🚧 Construction</button>
+            <button class="filter-btn" data-filter="traffic">🚦 Traffic</button>
+          </div>
+          <div class="map-live-badge">
+            <span class="pulse-dot"></span> Live Updates
+          </div>
+        </div>
+      </div>
+
+      <div id="map"></div>
+
+      <div class="map-legend">
+        <div class="legend-title">Risk Level</div>
+        <div class="legend-item"><span class="legend-dot high"></span> High Risk</div>
+        <div class="legend-item"><span class="legend-dot moderate"></span> Moderate</div>
+        <div class="legend-item"><span class="legend-dot low"></span> Low Risk</div>
+        <div class="legend-item"><span class="legend-dot safe"></span> Safe Route</div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="alert-ticker-wrapper">
+        <div class="ticker-label">
+          <span class="pulse-dot"></span> LIVE ALERTS
+        </div>
+        <div class="ticker-track">
+          <div class="ticker-content" id="ticker">
+            <span>⚠️ Severe flooding at Bellandur Lake Road — avoid travel &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+            <span>🕳️ Multiple potholes reported on Koramangala 80ft Road &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+            <span>🌊 Waterlogging at Silk Board junction — high disruption risk &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+            <span>✅ Outer Ring Road is clear and safe for travel &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+            <span>⚠️ Marathahalli Bridge — reduced visibility due to rain &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+            <span>🚧 Road construction on Whitefield Main Road — delays expected &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT HAZARD -->
+  <section class="section" id="report">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">Citizen Intelligence</div>
+        <h2 class="section-title">Report a <span class="gradient-text">Hazard</span></h2>
+        <p class="section-sub">Upload road images and let AI detect & classify hazards automatically</p>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-form glass-card">
+          <div class="upload-zone" id="upload-zone">
+            <div class="upload-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="url(#gUpload)" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><defs><linearGradient id="gUpload" x1="0" y1="0" x2="24" y2="24"><stop offset="0%" stop-color="#00f5ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+            </div>
+            <p class="upload-text">Drag & drop road image/video here</p>
+            <p class="upload-sub">or <label for="file-input" class="file-label">browse files</label></p>
+            <input type="file" id="file-input" accept="image/*,video/*" hidden/>
+            <div class="upload-formats">JPG, PNG, MP4 supported</div>
+            <div id="upload-preview"></div>
+          </div>
+
+          <div class="form-group mt-1">
+            <label class="form-label">Hazard Type</label>
+            <div class="hazard-type-grid">
+              <button class="hazard-type-btn active" data-type="flood">🌊 Flooding</button>
+              <button class="hazard-type-btn" data-type="pothole">🕳️ Pothole</button>
+              <button class="hazard-type-btn" data-type="damage">🏚️ Road Damage</button>
+              <button class="hazard-type-btn" data-type="blocked">🚫 Blocked Road</button>
+              <button class="hazard-type-btn" data-type="debris">🪨 Debris</button>
+              <button class="hazard-type-btn" data-type="other">⚠️ Other</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-input" id="report-location" placeholder="e.g. Bellandur Lake Road, Bengaluru"/>
+          </div>
+
+          <button class="btn-primary btn-full" id="analyze-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Analyze with AI
+          </button>
+        </div>
+
+        <div class="report-result glass-card" id="report-result">
+          <div class="empty-state" id="report-empty">
+            <div class="empty-icon">🔍</div>
+            <h3>AI Hazard Detection</h3>
+            <p>Upload a road image and click "Analyze with AI" to detect hazards instantly</p>
+          </div>
+          <div id="detection-result" style="display:none">
+            <div class="detection-header">
+              <span class="detection-badge">AI Detection Complete</span>
+            </div>
+            <div class="detection-grid" id="detection-grid"></div>
+            <div class="severity-meter">
+              <div class="severity-label">
+                <span>Overall Severity</span>
+                <span id="severity-value">High</span>
+              </div>
+              <div class="severity-bar-bg">
+                <div class="severity-bar" id="severity-bar"></div>
+              </div>
+            </div>
+            <div class="detection-actions">
+              <p id="detection-advisory"></p>
+              <button class="btn-primary btn-full" id="submit-report-btn">
+                ✅ Submit to City Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="section" id="dashboard">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">City Intelligence</div>
+        <h2 class="section-title">Urban Safety <span class="gradient-text">Dashboard</span></h2>
+        <p class="section-sub">Real-time city-wide civic intelligence and predictive risk analysis</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon" style="background: rgba(239,68,68,0.15); color:#ef4444">⚠️</div>
+          <div class="stat-card-info">
+            <span class="stat-card-num" data-target="247">0</span>
+            <span class="stat-card-label">Active Hazards</span>
+          </div>
+          <div class="stat-card-trend danger">+12 today</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon" style="background: rgba(59,130,246,0.15); color:#3b82f6">🌊</div>
+          <div class="stat-card-info">
+            <span class="stat-card-num" data-target="34">0</span>
+            <span class="stat-card-label">Flood Risk Zones</span>
+          </div>
+          <div class="stat-card-trend danger">+8 today</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon" style="background: rgba(16,185,129,0.15); color:#10b981">✅</div>
+          <div class="stat-card-info">
+            <span class="stat-card-num" data-target="1893">0</span>
+            <span class="stat-card-label">Safe Routes Planned</span>
+          </div>
+          <div class="stat-card-trend success">+241 today</div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon" style="background: rgba(245,158,11,0.15); color:#f59e0b">🔔</div>
+          <div class="stat-card-info">
+            <span class="stat-card-num" data-target="5482">0</span>
+            <span class="stat-card-label">Citizens Alerted</span>
+          </div>
+          <div class="stat-card-trend success">+823 today</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Risk Zones -->
+        <div class="glass-card risk-zones-card">
+          <div class="card-header">
+            <h3>High Risk Zones</h3>
+            <span class="live-tag"><span class="pulse-dot sm"></span> Live</span>
+          </div>
+          <div class="risk-list" id="risk-list"></div>
+        </div>
+
+        <!-- Predictions -->
+        <div class="glass-card predictions-card">
+          <div class="card-header">
+            <h3>AI Predictions</h3>
+            <span class="badge-cyan">Next 30 min</span>
+          </div>
+          <div class="predictions-list" id="predictions-list"></div>
+        </div>
+
+        <!-- Recent Reports -->
+        <div class="glass-card reports-card">
+          <div class="card-header">
+            <h3>Recent Citizen Reports</h3>
+            <span class="badge-purple">Live Feed</span>
+          </div>
+          <div class="reports-feed" id="reports-feed"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <div class="logo-icon sm">
+              <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18" stroke="url(#gF)" stroke-width="2"/><ellipse cx="20" cy="20" rx="10" ry="6" stroke="#00f5ff" stroke-width="1.5"/><circle cx="20" cy="20" r="4" fill="url(#gF)"/><circle cx="20" cy="20" r="2" fill="#fff"/><defs><linearGradient id="gF" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#00f5ff"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+            </div>
+            <span class="logo-text">CivicEye <span class="logo-ai">AI</span></span>
+          </div>
+          <p class="footer-tagline">"Because the fastest route isn't always the safest."</p>
+        </div>
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="#planner">Plan Route</a>
+            <a href="#map-section">Live Map</a>
+            <a href="#report">Report Hazard</a>
+            <a href="#dashboard">Dashboard</a>
+          </div>
+          <div class="footer-col">
+            <h4>Use Cases</h4>
+            <a href="#">Bike Riders</a>
+            <a href="#">Elderly Citizens</a>
+            <a href="#">Emergency Services</a>
+            <a href="#">Smart Cities</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 CivicEye AI — AI-Powered Urban Mobility Intelligence</p>
+        <p>Bengaluru Civic Intelligence Platform</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
